@@ -2,6 +2,7 @@ package com.hemanth.ehnotetask
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hemanth.ehnotetask.adapter.PatientsAdapter
 import com.hemanth.ehnotetask.data.model.GetPatient
@@ -18,14 +19,16 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        binding.progressBar.visibility = View.VISIBLE
 
         val call = RetrofitBuilder.apiService.getAllAvailableBooks(
-                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IkxhdGhhIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy91c2VyZGF0YSI6IjE4XzQ5RUJFRUIzX1Byb2QiLCJyb2xlIjoiNCIsIm5iZiI6MTYxMzM2ODA0NCwiZXhwIjoxNjEzNDU0NDQ0LCJpYXQiOjE2MTMzNjgwNDQsImlzcyI6Imh0dHBzOi8vZGV2ZWhub3RlYXBpLmF6dXJld2Vic2l0ZXMubmV0IiwiYXVkIjoiaHR0cHM6Ly9kZXZlaG5vdGVhcGkuYXp1cmV3ZWJzaXRlcy5uZXQifQ.d7VOcKUEN9FXrJ4kAIehuU7nYzipEvJqzq2Exwspv5s",
+                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IkxhdGhhIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy91c2VyZGF0YSI6IjE4XzQ5RUJFRUIzX1Byb2QiLCJyb2xlIjoiNCIsIm5iZiI6MTYxMzQ3MzM1MywiZXhwIjoxNjEzNTU5NzUzLCJpYXQiOjE2MTM0NzMzNTMsImlzcyI6Imh0dHBzOi8vZGV2ZWhub3RlYXBpLmF6dXJld2Vic2l0ZXMubmV0IiwiYXVkIjoiaHR0cHM6Ly9kZXZlaG5vdGVhcGkuYXp1cmV3ZWJzaXRlcy5uZXQifQ.G23rCdN7y7CCdQHVOjhDQTiv8ivmYrm3iuxnaCQVPF0",
                 "1557963"
         )
 
         call.enqueue(object: Callback<GetPatient> {
             override fun onResponse(call: Call<GetPatient>, response: Response<GetPatient>) {
+                binding.progressBar.visibility = View.GONE
                 if (response.isSuccessful) {
                     response.body()?.let { setAdapter(it) }
                 }
@@ -33,6 +36,7 @@ class MainActivity : AppCompatActivity() {
 
             override fun onFailure(call: Call<GetPatient>, t: Throwable) {
                 t.printStackTrace()
+                binding.progressBar.visibility = View.GONE
             }
         })
     }
